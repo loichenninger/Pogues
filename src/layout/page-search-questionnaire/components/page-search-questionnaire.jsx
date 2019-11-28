@@ -7,7 +7,7 @@ import { InputFilterWithCriteria } from 'widgets/input-filter-with-criteria';
 import { SearchResults } from 'widgets/search-results';
 import { PAGE_SEARCH_QUESTIONNAIRE } from 'constants/dom-constants';
 import {
-  TYPES_ITEMS,
+  TYPES_ITEMS_UUID,
   SEARCH_CRITERIAS,
   SEARCH_RESULTS_COLUMNS,
 } from 'constants/pogues-constants';
@@ -35,7 +35,7 @@ class PageSearchQuestionnaire extends Component {
 
   render() {
     const propsInputFilterWithCriteria = {
-      typeItem: TYPES_ITEMS.QUESTIONNAIRE,
+      typeItem: TYPES_ITEMS_UUID.QUESTIONNAIRE,
       criterias: SEARCH_CRITERIAS.QUESTIONNAIRE,
       label: Dictionary.searchInputQuestionnaireLabel,
     };

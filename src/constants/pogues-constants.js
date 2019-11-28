@@ -118,6 +118,11 @@ export const TYPES_ITEMS = {
   CODES_LIST: 'CodeList',
 };
 
+export const TYPES_ITEMS_UUID = {
+  QUESTIONNAIRE: 'f196cc07-9c99-4725-ad55-5b34f479cf7d',
+  CODES_LIST: '8b108ef8-b642-4484-9c49-f88e4bf7cf1d',
+};
+
 export const SEARCH_CRITERIAS = {
   QUESTIONNAIRE: [
     {
@@ -157,15 +162,15 @@ export const SEARCH_RESULTS_COLUMNS = {
     },
     {
       dictionary: 'searchResultSerie',
-      key: 'subgroupId',
+      key: 'subgroupLabel',
     },
     {
       dictionary: 'searchResultOperation',
-      key: 'studyUnitId',
+      key: 'studyUnitLabel',
     },
     {
       dictionary: 'searchResultCampaign',
-      key: 'dataCollectionId',
+      key: 'dataCollectionLabel',
     },
   ],
   CODES_LIST: [
