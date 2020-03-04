@@ -1,8 +1,8 @@
 FROM node:12 as node
 WORKDIR /pogues
 COPY ./ /pogues/
-RUN yarn
-RUN yarn build:dev
+RUN npm install
+RUN npm run build:dev
 
 FROM nginx:1.17
 COPY config/nginx.conf /etc/nginx/conf.d/default.conf
