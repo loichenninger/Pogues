@@ -21,10 +21,10 @@ function renderRowValues(values) {
     v,
     index, // eslint-disable-next-line react/no-array-index-key
   ) => (
-    <div key={index} className={COLUMN_CLASS}>
-      {v}
-    </div>
-  ));
+      <div key={index} className={COLUMN_CLASS} dangerouslySetInnerHTML={{ __html: v }}>
+
+      </div>
+    ));
 }
 
 function renderRowActions(actions, values) {
@@ -118,13 +118,19 @@ function SearchResults({
 
       {/* Rows */}
       {values.map((v, index) => {
-        const rowValues = columns.map(c => v[c.key]);
+
+        const rowValues = columns.map(({ key }) => {
+          const value = v[key]
+
+          if (Array.isArray(value)) return value.join(', ')
+          return value
+        });
 
         return (
           // eslint-disable-next-line react/no-array-index-key
           <div key={index} className={ROW_CLASS}>
             {renderRowValues(rowValues)}
-            {renderRowActions(actions)}
+            {renderRowActions(actions, v)}
           </div>
         );
       })}

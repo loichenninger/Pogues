@@ -260,3 +260,11 @@ export const getSearchResults = (typeItem, criterias, filter = '') => {
     }),
   }).then(res => res.json());
 };
+
+export const searchCodesLists = (search) =>
+  fetch(`http://localhost:8080/ddi-access-services/api/search/items/${search}`, {
+    headers: {
+      Accept: 'application/json',
+    },
+    credentials: 'include',
+  }).then(res => res.json());

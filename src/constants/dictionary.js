@@ -104,7 +104,7 @@ const dictionary = {
     en: 'Loop',
     fr: 'Boucles',
   },
-  Scope : {
+  Scope: {
     en: 'Scope',
     fr: 'Portée',
   },
@@ -378,7 +378,7 @@ const dictionary = {
     en: 'Final member',
     fr: 'Membre final',
   },
-  
+
   AddButton: {
     en: 'Add button label',
     fr: 'Libellé du bouton d\'ajout',
@@ -403,7 +403,7 @@ const dictionary = {
     fr: 'Portée Questionnaire',
     en: 'Scope Questionnaire',
   },
-   
+
   specify: {
     en: 'Specify',
     fr: 'Préciser',
@@ -411,7 +411,7 @@ const dictionary = {
   hours: {
     en: 'hours',
     fr: 'heures',
-  }, 
+  },
 
   minutes: {
     en: 'minutes',
@@ -426,12 +426,12 @@ const dictionary = {
   years: {
     en: 'years',
     fr: 'années',
-  }, 
+  },
 
   months: {
     en: 'months',
     fr: 'mois',
-  }, 
+  },
 
   dateinitial: {
     en: 'Date format',
@@ -446,7 +446,7 @@ const dictionary = {
   formatDate: {
     en: 'please respect the date format',
     fr: 'merci de respecter le format de la date',
-  }, 
+  },
 
   unit: {
     en: 'Unit of measure',
@@ -1374,6 +1374,10 @@ const dictionary = {
   searchResultTitle: {
     fr: 'Titre',
     en: 'Title',
+  },
+  searchResultDescription: {
+    fr: 'Description',
+    en: 'Description',
   },
   searchResultLabel: {
     fr: 'Libellé',
