@@ -268,3 +268,12 @@ export const searchCodesLists = (search) =>
     },
     credentials: 'include',
   }).then(res => res.json());
+
+
+export const getCodesListById = (id) =>
+  fetch(`http://localhost:8080/rmspogfo/pogues/meta-data/code-list/${id}`, {
+    headers: {
+      Accept: 'application/json',
+    },
+    credentials: 'include',
+  }).then(res => res.json());
