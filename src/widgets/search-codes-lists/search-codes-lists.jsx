@@ -10,7 +10,11 @@ import {
   SEARCH_RESULTS_COLUMNS,
 } from 'constants/pogues-constants';
 import Dictionary from 'utils/dictionary/dictionary';
-import { searchCodesLists } from "utils/remote-api"
+import { searchCodesLists, getCodesListById } from "utils/remote-api"
+import { change } from 'redux-form'
+import { connect } from 'react-redux'
+import "./search-codes-lists.scss"
+
 
 const {
   COMPONENT_CLASS,
@@ -19,22 +23,43 @@ const {
 } = WIDGET_SEARCH_CODES_LISTS;
 
 
-function SearchCodesLists({ path }) {
+const OPEN_MODAL = 'OPEN_MODAL'
+const FETCH_DETAIL = 'FETCH_DETAIL'
+const SEARCH = 'SEARCH'
+
+function SearchCodesLists({ path, storeCodesLists }) {
   const [searchValue, setSearchValue] = useState('')
   const [codesLists, setCodesLists] = useState([])
-  const [pendingSearch, setPendingSearch] = useState(false)
   const [selectedCodesList, setSelectedCodesList] = useState(null)
+  const [currentAction, setCurrentAction] = useState(null)
+  const [codesListDetail, setCodesListDetail] = useState(null)
 
   useEffect(() => {
     // TODO LOIC changer quand le back fera le proxy
-    if (pendingSearch && searchValue) {
+    if (currentAction === SEARCH) {
       searchCodesLists(searchValue).then(response => {
         setCodesLists(response)
       })
+        .finally(() => setCurrentAction(null))
     }
-    setPendingSearch(false)
-  }, [pendingSearch, searchValue])
+    return () => console.log('useEffect')
+  }, [currentAction])
 
+  useEffect(() => {
+    if (currentAction === FETCH_DETAIL) {
+      getCodesListById(selectedCodesList.id).then(response => {
+        setCodesListDetail(response)
+        storeCodesLists(response)
+      })
+        .finally(() =>
+          setCurrentAction(null)
+
+        )
+
+
+    }
+  }, [currentAction])
+  console.log(codesListDetail)
   const propsStatisticaContextCriteria = {
     formName: DEFAULT_FORM_NAME,
     path,
@@ -50,6 +75,7 @@ function SearchCodesLists({ path }) {
       {
         dictionary: 'searchResultActionReuse',
         action: (values) => {
+          setCurrentAction(OPEN_MODAL)
           setSelectedCodesList(values)
         },
         iconOnly: true,
@@ -58,14 +84,20 @@ function SearchCodesLists({ path }) {
       {
         dictionary: 'searchResultActionReuse',
         action: (values) => {
-          alert('test')
+          setCurrentAction(FETCH_DETAIL)
+          setSelectedCodesList(values)
+          console.log(values)
         },
         iconOnly: true,
-        icon: 'glyphicon-tags',
+        icon: (codeList) => {
+          console.log(codeList)
+          return currentAction === FETCH_DETAIL && codeList.id === selectedCodesList.id ? 'loader' : 'glyphicon-download-alt'
+        },
       },
     ],
     values: codesLists
   };
+  console.log(currentAction)
   return (
     <div className={COMPONENT_CLASS}>
       <div className={SEARCH_CLASS}>
@@ -82,16 +114,18 @@ function SearchCodesLists({ path }) {
             /></div>
           </div>
           <button
+            type="button"
             className={WIDGET_INPUT_FILTER_WITH_CRITERIA.BUTTON_SEARCH_CLASS}
-            onClick={() => setPendingSearch(true)}
+            onClick={() => setCurrentAction(SEARCH)}
           >
             {Dictionary.searchInputButton}
           </button>
         </div>
       </div>
       <SearchResults {...propsSearchResults} />
+
       <ReactModal
-        isOpen={selectedCodesList}
+        isOpen={currentAction === OPEN_MODAL}
         ariaHideApp={false}
         shouldCloseOnOverlayClick={false}
       >
@@ -99,7 +133,10 @@ function SearchCodesLists({ path }) {
         <ul>{
           selectedCodesList?.modalities.map((modality, index) => <li key={index}>{modality}</li>)
         }</ul>
-        <button onClick={() => setSelectedCodesList(null)}>close</button>
+        <button onClick={() => {
+          setCurrentAction(null)
+          setSelectedCodesList(null)
+        }}>close</button>
       </ReactModal>
     </div>
   );
@@ -113,4 +150,25 @@ SearchCodesLists.defaultProps = {
   path: '',
 };
 
-export default SearchCodesLists;
+const mapDispatchToProps = (dispatch, ownProps) => {
+  console.log('path', ownProps.path)
+
+  return {
+    storeCodesLists(codesList) {
+      const codes = codesList.Code.map(({ Label, Value }, index) => {
+        return {
+          label: Label,
+          value: Value,
+          parent: "",
+          depth: 1,
+          weight: index + 1
+        }
+      })
+      dispatch(change('component', ownProps.path + 'label', codesList.Label));
+      dispatch(change('component', ownProps.path + 'codes', codes));
+      dispatch(change('component', ownProps.path + 'panel', 'NEW'));
+
+    }
+  }
+}
+export default connect(null, mapDispatchToProps)(SearchCodesLists);

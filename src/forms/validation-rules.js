@@ -21,7 +21,7 @@ export function required(value = '') {
 }
 
 export function unique(property) {
-  return function(values) {
+  return function (values) {
     if (values.length <= 1) {
       return undefined;
     }
@@ -40,7 +40,7 @@ export function uniqueCode() {
 }
 
 export function maxLength(max) {
-  return function(value) {
+  return function (value) {
     return value && value.length > max
       ? `Must be ${max} characters or less`
       : undefined;
@@ -58,7 +58,7 @@ export function number(value) {
 }
 
 export function minValue(min) {
-  return function(value) {
+  return function (value) {
     if (value === undefined || value === '')
       return `${Dictionary.validationMinNumber} ${min}`;
     return parseInt(value, 10) < min
@@ -68,7 +68,7 @@ export function minValue(min) {
 }
 
 export function maxValue(max) {
-  return function(value) {
+  return function (value) {
     if (value === undefined || value === '')
       return `${Dictionary.validationMaxNumber} ${max}`;
     return parseInt(value, 10) > max
@@ -174,7 +174,7 @@ export function validCollectedVariables(
       codesListsStore
     );
   }
- 
+
   /**
    * for Single Choice Response, we check if the codeListReference for each
    * variable are in the same order as the ones expected
@@ -191,53 +191,52 @@ export function validCollectedVariables(
 
   function objectCompare(object1, object2) {
     let equal = true;
-    if(object2) {
+    if (object2) {
       for (var p in object1) {
-          if (object1[p] == '' && object2[p] != undefined && object2[p] != '') {
+        if (object1[p] == '' && object2[p] != undefined && object2[p] != '') {
+          equal = false;
+        }
+        else if (object1[p] != '' && object2[p] == undefined) {
+          equal = false;
+        }
+        else if (object1[p] != '' && object2[p] != undefined) {
+          if (object1[p] != object2[p]) {
             equal = false;
-          }
-          else if(object1[p] != '' && object2[p] == undefined) {
-            equal = false;
-          }
-          else if( object1[p] != '' && object2[p] != undefined) {
-            if (object1[p] != object2[p]) {
-              equal = false;
-            }
           }
         }
-     }
+      }
+    }
     return equal;
   }
 
   let codeListPrecision = false;
-    if(expectedVariables.length != value.length && type === SINGLE_CHOICE){
-      codeListPrecision = true;
-    }
-    if(expectedVariables.length != value.length && type === MULTIPLE_CHOICE){
-      codeListPrecision = true;
-    }
+  if (expectedVariables.length != value.length && type === SINGLE_CHOICE) {
+    codeListPrecision = true;
+  }
+  if (expectedVariables.length != value.length && type === MULTIPLE_CHOICE) {
+    codeListPrecision = true;
+  }
+  codeListPrecision = false;
   if (
     type === SINGLE_CHOICE &&
     value[0] &&
     value[0].codeListReference !== expectedVariables[0].codeListReference ||
     type === SINGLE_CHOICE && value[0] && value[0].codeListReferenceLabel !== expectedVariables[0].codeListReferenceLabel ||
     type === SINGLE_CHOICE && value[0] && codeListPrecision
-  )
-   {
-    return Dictionary.validation_collectedvariable_need_reset;
-   }
-   
-  if (
-    type === MULTIPLE_CHOICE &&
-    value[0] && 
-    value[0].codeListReference && 
-    value[0].codeListReference !== expectedVariables[0].codeListReference ||
-    type === MULTIPLE_CHOICE && value[0] && codeListPrecision
   ) {
     return Dictionary.validation_collectedvariable_need_reset;
-    }
+  }
 
-  if (type === TABLE && value[0] || type === SIMPLE && value[0] ) {
+  if (
+    type === MULTIPLE_CHOICE && (
+      (value[0]?.codeListReference &&
+        value[0].codeListReference !== expectedVariables[0].codeListReference) ||
+      (value[0] && codeListPrecision))
+  ) {
+    return Dictionary.validation_collectedvariable_need_reset;
+  }
+
+  if (type === TABLE && value[0] || type === SIMPLE && value[0]) {
     const typevalue = value[0].type;
     const typeexpectedVariables = expectedVariables[0].type;
     if (
@@ -249,8 +248,8 @@ export function validCollectedVariables(
       expectedVariables.length != value.length
     ) {
       return Dictionary.validation_collectedvariable_need_reset;
-      }
-  } 
+    }
+  }
 
   /**
    * For Multiple Choice Reponse, we check if all the codes of a code list
@@ -261,13 +260,15 @@ export function validCollectedVariables(
   if (expectedVariables && value.length === 0 && expectedVariables.length > 0) {
     return Dictionary.validation_collectedvariable_need_creation;
   }
+
   if (
     expectedVariables &&
     value.length === 1 &&
     expectedVariables.length === 1
-  ){
+  ) {
     return false;
-   }
+  }
+
   return isCodesTheSame &&
     isTheSameOrder &&
     (expectedVariables && value.length === expectedVariables.length)
@@ -284,11 +285,11 @@ export function validateEarlyTarget(
   if (editingComponentId !== '') {
     result =
       value !== '' &&
-      componentsStore[value] &&
-      getComponentsTargetsByComponent(
-        componentsStore,
-        componentsStore[editingComponentId]
-      ).indexOf(value) === -1
+        componentsStore[value] &&
+        getComponentsTargetsByComponent(
+          componentsStore,
+          componentsStore[editingComponentId]
+        ).indexOf(value) === -1
         ? Dictionary.errorGoToEarlierTgt
         : undefined;
   }

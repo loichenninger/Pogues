@@ -39,7 +39,8 @@ function renderRowActions(actions, values) {
             a.action(values);
           }}
         >
-          {a.icon && <span className={`glyphicon ${a.icon}`} />}
+          {!a.icon.bind && <span className={`glyphicon ${a.icon}`} />}
+          {a.icon.bind && <span className={`glyphicon ${a.icon(values)}`} />}
           <span
             className={ClassSet({
               'sr-only': a.iconOnly,
