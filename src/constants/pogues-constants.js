@@ -180,7 +180,7 @@ export const SEARCH_RESULTS_COLUMNS = {
     },
     {
       dictionary: 'searchResultSerie',
-      key: 'subGroups',
+      key: 'subGroupLabels',
     },
   ],
 };
